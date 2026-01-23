@@ -7,7 +7,6 @@ const teams = [
   "Red Dragons", "Seven Boys", "Tosh Sement", "Usta Tom Markazi"
 ];
 
-
 const groups = ['A', 'B', 'C', 'D', 'E', 'F'];
 const groupContainer = document.getElementById('groups');
 const teamSearch = document.getElementById('teamSearch');
@@ -17,17 +16,14 @@ const resetBtn = document.getElementById('resetBtn');
 const logo = document.getElementById('logo');
 const title = document.getElementById('title');
 
-let state = JSON.parse(localStorage.getItem('drawState'));
-
-// Reset state if not valid or doesn't match the configuration
-if (!state || Object.keys(state.groups).length !== groups.length || (state.remaining.length + Object.values(state.groups).flat().filter(Boolean).length) !== teams.length) {
-  state = {
-    remaining: [...teams],
-    groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]]))
-  };
-}
+// Requirement: Reset data on refresh (No localStorage persistence for state)
+let state = {
+  remaining: [...teams],
+  groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]]))
+};
 
 let selectedTeam = null;
+let autoDownloaded = false;
 
 function renderTeams(filter = '') {
   teamList.innerHTML = '';
@@ -71,6 +67,8 @@ function renderGroups() {
       }
     });
   }
+
+  checkAutoDownload();
 }
 
 function handleSlotClick(group, index) {
@@ -78,25 +76,22 @@ function handleSlotClick(group, index) {
   if (current) {
     state.groups[group][index] = null;
     state.remaining.push(current);
-    state.remaining.sort(); // Keep alphabetical order
+    state.remaining.sort();
   } else if (selectedTeam) {
     state.groups[group][index] = selectedTeam;
     state.remaining = state.remaining.filter(t => t !== selectedTeam);
     selectedTeam = null;
   }
-  saveState(); renderTeams(teamSearch.value); renderGroups();
+  renderTeams(teamSearch.value); renderGroups();
 }
 
-function saveState() {
-  localStorage.setItem('drawState', JSON.stringify(state));
+function checkAutoDownload() {
+  const allFilled = groups.every(g => state.groups[g].every(team => team !== null));
+  if (allFilled && !autoDownloaded) {
+    autoDownloaded = true;
+    setTimeout(exportExcel, 1000); // Delayed for visual effect
+  }
 }
-
-teamSearch.addEventListener('input', e => renderTeams(e.target.value));
-
-downloadBtn.addEventListener('click', exportExcel);
-title.addEventListener('click', exportExcel);
-resetBtn.addEventListener('click', resetAll);
-logo.addEventListener('click', resetAll);
 
 function exportExcel() {
   let html = "<table border='1'><tr><th>Group</th><th>Teams</th></tr>";
@@ -107,20 +102,22 @@ function exportExcel() {
   html += "</table>";
   const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'draw_results.xls';
+  const a = document.createElement('a'); a.href = url; a.download = 'qura_natijalari.xls';
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
 
 function resetAll() {
   if (confirm("Barchasini tozalash?")) {
     state = { remaining: [...teams], groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]])) };
-    saveState(); renderTeams(); renderGroups();
+    autoDownloaded = false;
+    renderTeams(); renderGroups();
   }
 }
 
-window.addEventListener('beforeunload', (e) => {
-  e.preventDefault(); e.returnValue = '';
-});
+teamSearch.addEventListener('input', e => renderTeams(e.target.value));
+downloadBtn.addEventListener('click', exportExcel);
+resetBtn.addEventListener('click', resetAll);
+logo.addEventListener('click', resetAll);
 
 renderTeams();
 renderGroups();
