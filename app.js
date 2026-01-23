@@ -11,12 +11,9 @@ const groups = ['A', 'B', 'C', 'D', 'E', 'F'];
 const groupContainer = document.getElementById('groups');
 const teamSearch = document.getElementById('teamSearch');
 const teamList = document.getElementById('teamList');
-const downloadBtn = document.getElementById('downloadExcel');
-const resetBtn = document.getElementById('resetBtn');
 const logo = document.getElementById('logo');
-const title = document.getElementById('title');
 
-// Requirement: Reset data on refresh (No localStorage persistence for state)
+// Data resets on refresh
 let state = {
   remaining: [...teams],
   groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]]))
@@ -89,7 +86,7 @@ function checkAutoDownload() {
   const allFilled = groups.every(g => state.groups[g].every(team => team !== null));
   if (allFilled && !autoDownloaded) {
     autoDownloaded = true;
-    setTimeout(exportExcel, 1000); // Delayed for visual effect
+    setTimeout(exportExcel, 1000);
   }
 }
 
@@ -115,8 +112,6 @@ function resetAll() {
 }
 
 teamSearch.addEventListener('input', e => renderTeams(e.target.value));
-downloadBtn.addEventListener('click', exportExcel);
-resetBtn.addEventListener('click', resetAll);
 logo.addEventListener('click', resetAll);
 
 renderTeams();
