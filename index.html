@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+  <meta charset="UTF-8">
+  <title>24 Teams Draw | NamFootball</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <header>
+    <div class="top-nav">
+      <img src="logo.png" alt="Logo" id="logo">
+      <h1 id="title">24 Ta Jamoa Guruhlash</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Jamoalar</h2>
+      <input type="text" id="teamSearch" placeholder="Jamoani qidiring...">
+      <ul id="teamList"></ul>
+
+      <div class="actions">
+        <button id="downloadExcel" title="Excel yuklab olish"><i class="fas fa-file-excel"></i></button>
+        <button id="resetBtn" title="Tozalash"><i class="fas fa-rotate-left"></i></button>
+      </div>
+    </aside>
+
+    <main>
+      <div id="groups" class="groups"></div>
+      <div class="copyright">
+        <span>© Copyright by</span>
+        <img src="logo_2.png" alt="ETAMIN Logo">
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

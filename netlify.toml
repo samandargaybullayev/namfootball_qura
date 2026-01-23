@@ -1,0 +1,5 @@
+/* Netlify Optimization and General SEO */
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
