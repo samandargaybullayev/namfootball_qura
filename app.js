@@ -42,19 +42,31 @@ function renderTeams(filter = '') {
 }
 
 function renderGroups() {
-  groupContainer.innerHTML = '';
+  if (groupContainer.children.length === 0) {
+    for (const g of groups) {
+      const div = document.createElement('div'); div.className = 'group';
+      const title = document.createElement('h3'); title.textContent = `Guruh ${g}`;
+      div.appendChild(title);
+      state.groups[g].forEach((team, i) => {
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.id = `slot-${g}-${i}`;
+        slot.addEventListener('click', () => handleSlotClick(g, i));
+        div.appendChild(slot);
+      });
+      groupContainer.appendChild(div);
+    }
+  }
+
   for (const g of groups) {
-    const div = document.createElement('div'); div.className = 'group';
-    const title = document.createElement('h3'); title.textContent = `Group ${g}`;
-    div.appendChild(title);
     state.groups[g].forEach((team, i) => {
-      const slot = document.createElement('div'); slot.className = 'slot';
-      slot.textContent = team || '...';
-      if (team) slot.classList.add('filled');
-      slot.addEventListener('click', () => handleSlotClick(g, i));
-      div.appendChild(slot);
+      const slot = document.getElementById(`slot-${g}-${i}`);
+      if (slot) {
+        slot.textContent = team || '...';
+        if (team) slot.classList.add('filled');
+        else slot.classList.remove('filled');
+      }
     });
-    groupContainer.appendChild(div);
   }
 }
 
@@ -63,6 +75,7 @@ function handleSlotClick(group, index) {
   if (current) {
     state.groups[group][index] = null;
     state.remaining.push(current);
+    state.remaining.sort(); // Keep alphabetical order
   } else if (selectedTeam) {
     state.groups[group][index] = selectedTeam;
     state.remaining = state.remaining.filter(t => t !== selectedTeam);
