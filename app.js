@@ -47,13 +47,16 @@ function renderGroups() {
       const div = document.createElement('div'); div.className = 'group';
       const title = document.createElement('h3'); title.textContent = `Guruh ${g}`;
       div.appendChild(title);
+      const slotsContainer = document.createElement('div');
+      slotsContainer.className = 'slots-container';
       state.groups[g].forEach((team, i) => {
         const slot = document.createElement('div');
         slot.className = 'slot';
         slot.id = `slot-${g}-${i}`;
         slot.addEventListener('click', () => handleSlotClick(g, i));
-        div.appendChild(slot);
+        slotsContainer.appendChild(slot);
       });
+      div.appendChild(slotsContainer);
       groupContainer.appendChild(div);
     }
   }
