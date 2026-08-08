@@ -254,3 +254,22 @@ main {
 .copyright:hover img {
   transform: scale(1.1);
 }
+
+.draw-btn {
+  background: linear-gradient(135deg, var(--accent), #4a148c);
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-family: var(--font-display);
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 15px rgba(130, 87, 255, 0.4);
+  width: 100%;
+}
+.draw-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(130, 87, 255, 0.6);
+}

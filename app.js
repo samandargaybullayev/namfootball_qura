@@ -1,12 +1,24 @@
-const teams = [
-  "Cosmos", "Yandama Do’stlik", "Berlak", "Alpha Team",
-  "Win Plast", "Usta Akaxon", "2-maktab", "Sevimli Lavash",
-  "Mubashshir Avto", "Arsenal", "AkaUka Quruvchi", "Saad Paint",
-  "Sanjar Chef", "Dominant", "Manchester United", "Jahon Qurilish Buildings",
-  "Usta Pro Max", "Darko Plus", "Tunkafonchilar", "Al-Rizo mebel",
-  "Marjon Iplari", "Bozorça", "Mister M", "Parfume 170",
-  "ChinTech", "Zafar 17", "AT Truck", "Rovuston",
-  "No Mercy", "Usta Tom Markazi", "Red Bull", "7Saber"
+const pots = [
+  // Slot 1
+  [
+    "Usta Tom Markazi", "Marjon Iplari", "ChinTech", "Parfume 170",
+    "Bozorça", "Mubashshir Avto", "No Mercy", "Mister M"
+  ],
+  // Slot 2
+  [
+    "Al-Rizo mebel", "Zafar 17", "AT Truck", "Cosmos",
+    "Yandama Do’stlik", "Tunkafonchilar", "Rovuston", "Sanjar Chef"
+  ],
+  // Slot 3
+  [
+    "Usta Pro Max", "Arsenal", "AkaUka Quruvchi", "Saad Paint",
+    "Berlak", "Alpha Team", "Darko Plus", "Usta Akaxon"
+  ],
+  // Slot 4
+  [
+    "Win Plast", "2-maktab", "Sevimli Lavash", "Dominant",
+    "Manchester United", "Jahon Qurilish Buildings", "Red Bull", "7Saber"
+  ]
 ];
 
 const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -15,25 +27,23 @@ const teamSearch = document.getElementById('teamSearch');
 const teamList = document.getElementById('teamList');
 const logo = document.getElementById('logo');
 
-// Data resets on refresh
 let state = {
-  remaining: [...teams],
+  remainingPots: pots.map(pot => [...pot]),
   groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]]))
 };
 
-let selectedTeam = null;
+let isRolling = false;
 let autoDownloaded = false;
 
 function renderTeams(filter = '') {
   teamList.innerHTML = '';
-  state.remaining.filter(t => t.toLowerCase().includes(filter.toLowerCase()))
-    .forEach(t => {
+  state.remainingPots.forEach((pot, potIndex) => {
+    pot.filter(t => t.toLowerCase().includes(filter.toLowerCase())).forEach(t => {
       const li = document.createElement('li');
-      li.textContent = t;
-      if (t === selectedTeam) li.classList.add('selected');
-      li.addEventListener('click', () => { selectedTeam = t; renderTeams(); });
+      li.textContent = `${t} (Slot ${potIndex + 1})`;
       teamList.appendChild(li);
     });
+  });
 }
 
 function renderGroups() {
@@ -70,18 +80,45 @@ function renderGroups() {
   checkAutoDownload();
 }
 
-function handleSlotClick(group, index) {
-  const current = state.groups[group][index];
+function handleSlotClick(group, potIndex) {
+  if (isRolling) return;
+  const current = state.groups[group][potIndex];
   if (current) {
-    state.groups[group][index] = null;
-    state.remaining.push(current);
-    state.remaining.sort();
-  } else if (selectedTeam) {
-    state.groups[group][index] = selectedTeam;
-    state.remaining = state.remaining.filter(t => t !== selectedTeam);
-    selectedTeam = null;
+    // Undo: if slot is already filled, click to remove it and return to remaining pot
+    state.groups[group][potIndex] = null;
+    state.remainingPots[potIndex].push(current);
+    renderTeams(teamSearch.value);
+    renderGroups();
+  } else {
+    // Random draw with 5-second rolling animation
+    const pot = state.remainingPots[potIndex];
+    if (pot.length > 0) {
+      isRolling = true;
+      const slotEl = document.getElementById(`slot-${group}-${potIndex}`);
+      slotEl.classList.add('filled');
+      
+      const randomIdx = Math.floor(Math.random() * pot.length);
+      const pickedTeam = pot.splice(randomIdx, 1)[0];
+      
+      // Update sidebar immediately to show it's "taken" from pot
+      renderTeams(teamSearch.value);
+      
+      const visualPool = [...pot, pickedTeam];
+      
+      const rollInterval = setInterval(() => {
+        const visualRandom = Math.floor(Math.random() * visualPool.length);
+        slotEl.textContent = visualPool[visualRandom];
+      }, 100);
+
+      setTimeout(() => {
+        clearInterval(rollInterval);
+        state.groups[group][potIndex] = pickedTeam;
+        slotEl.textContent = pickedTeam;
+        isRolling = false;
+        renderGroups();
+      }, 5000);
+    }
   }
-  renderTeams(teamSearch.value); renderGroups();
 }
 
 function checkAutoDownload() {
@@ -106,8 +143,12 @@ function exportExcel() {
 }
 
 function resetAll() {
+  if (isRolling) return;
   if (confirm("Barchasini tozalash?")) {
-    state = { remaining: [...teams], groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]])) };
+    state = {
+      remainingPots: pots.map(pot => [...pot]),
+      groups: Object.fromEntries(groups.map(g => [g, [null, null, null, null]]))
+    };
     autoDownloaded = false;
     renderTeams(); renderGroups();
   }
