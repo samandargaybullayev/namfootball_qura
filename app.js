@@ -1,13 +1,15 @@
 const teams = [
-  "Allwood", "Chin Tech FC", "FC Adim", "FC Birdamlik",
-  "FC Elite", "FC Favorit", "FC Kosonsoy", "FC Marjon",
-  "FC Nurobod", "FC Partsezd", "FC Ravnaq", "FC Turan",
-  "FC Winners", "FC Xonobod", "FC Yoshlik", "FC Zenix",
-  "FC Ziyokor", "Mubashshir Avto", "Nam United", "Pov Jivoy FC",
-  "Red Dragons", "Seven Boys", "Tosh Sement", "Usta Tom Markazi"
+  "Cosmos", "Yandama Do’stlik", "Berlak", "Alpha Team",
+  "Win Plast", "Usta Akaxon", "2-maktab", "Sevimli Lavash",
+  "Mubashshir Avto", "Arsenal", "AkaUka Quruvchi", "Saad Paint",
+  "Sanjar Chef", "Dominant", "Manchester United", "Jahon Qurilish Buildings",
+  "Usta Pro Max", "Darko Plus", "Tunkafonchilar", "Al-Rizo mebel",
+  "Marjon Iplari", "Bozorça", "Mister M", "Parfume 170",
+  "ChinTech", "Zafar 17", "AT Truck", "Rovuston",
+  "No Mercy", "Usta Tom Markazi", "Red Bull", "7Saber"
 ];
 
-const groups = ['A', 'B', 'C', 'D', 'E', 'F'];
+const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const groupContainer = document.getElementById('groups');
 const teamSearch = document.getElementById('teamSearch');
 const teamList = document.getElementById('teamList');
