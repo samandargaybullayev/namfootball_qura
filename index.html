@@ -3,38 +3,85 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>32 Teams Draw | NamFootball</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>24 Ta Jamoa Guruhlash | NamFootball</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@300;400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
   <header>
     <div class="top-nav">
-      <img src="logo.png" alt="Logo" id="logo">
-      <h1 id="title">32 Ta Jamoa Guruhlash</h1>
+      <div class="brand">
+        <img src="logo.png" alt="NamFootball Logo" id="logo">
+        <div class="brand-text">
+          <h1 id="title">24 Ta Jamoa Guruhlash</h1>
+          <span class="subtitle">Namangan Mini Football Ligasi</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="stats-badge" id="progressBadge">
+          <i class="fa-solid fa-users-viewfinder"></i>
+          <span>Joylandi: <strong id="placedCount">0</strong> / 24</span>
+        </div>
+        <button id="exportBtn" class="btn btn-export" title="Natijalarni Excel formatida yuklab olish">
+          <i class="fa-solid fa-file-excel"></i>
+          <span>Excel yuklab olish</span>
+        </button>
+        <button id="soundToggle" class="btn btn-icon" title="Ovozni yoqish/o'chirish">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+        <button id="resetBtn" class="btn btn-reset" title="Barcha joylashtirilgan jamoalarni qaytarish">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Tozalash</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <div class="container">
+    <!-- Chap tomon: Jamoalar kartochkalari -->
     <aside class="sidebar">
-      <h2>Jamoalar</h2>
-      <input type="text" id="teamSearch" placeholder="Jamoani qidiring..." style="margin-top: 15px;">
-      <ul id="teamList"></ul>
+      <div class="sidebar-header">
+        <div class="sidebar-title-row">
+          <h2>Jamoalar</h2>
+          <span class="badge-count" id="remainingBadge">24 ta qoldi</span>
+        </div>
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="teamSearch" placeholder="Jamoani qidiring..." autocomplete="off">
+          <button id="clearSearch" class="clear-search" style="display: none;">&times;</button>
+        </div>
+        <div class="selection-hint" id="selectionHint">
+          <i class="fa-solid fa-hand-pointer"></i> Kartochkani tanlab guruh slotini bosing yoki to'g'ridan-to'g'ri sudrab (drag & drop) tashlang.
+        </div>
+      </div>
+
+      <div id="teamCardList" class="team-cards-list"></div>
     </aside>
 
+    <!-- O'ng tomon: Guruhlar (A, B, C, D, E, F) -->
     <main>
       <div id="groups" class="groups"></div>
-      <a href="https://etamin.digital" target="_blank" class="copyright">
-        <img src="logo_2.png" alt="ETAMIN Logo">
-      </a>
+      
+      <footer class="footer-bar">
+        <a href="https://etamin.digital" target="_blank" class="copyright">
+          <span>Hamkor:</span>
+          <img src="logo_2.png" alt="ETAMIN Logo">
+        </a>
+      </footer>
     </main>
   </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast"></div>
 
   <script src="app.js"></script>
 </body>
